@@ -14,6 +14,7 @@ interface DmxAPI {
   onUniverseUpdate(cb: (data: { universe: number; values: number[] }) => void): () => void
 }
 
+
 interface FixtureAPI {
   importQxf(): Promise<FixtureDefinition[]>
   importFolder(): Promise<FolderScanResult | null>
