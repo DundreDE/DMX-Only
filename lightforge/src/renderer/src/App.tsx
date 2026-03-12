@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { TitleBar } from "./components/layout/TitleBar"
 import { PatchPanel } from "./components/fixture/PatchPanel"
 import { FixtureBrowser } from "./components/fixture/FixtureBrowser"
+import { FixtureCreator } from "./components/fixture/FixtureCreator"
 import { ControlTab } from "./components/control/ControlTab"
 import { LiveTab } from "./components/live/LiveTab"
 import { Settings } from "./components/pro/Settings"
@@ -33,13 +34,18 @@ function App(): React.JSX.Element {
   )
 }
 
-// Setup tab: two sub-tabs (Fixtures | Patch)
+type SetupSub = 'patch' | 'fixtures' | 'creator'
+
 function SetupTab(): React.JSX.Element {
-  const [sub, setSub] = useState<'patch' | 'fixtures'>('patch')
+  const [sub, setSub] = useState<SetupSub>('patch')
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center gap-0.5 px-3 shrink-0" style={{ borderBottom: '1px solid #1e2130', background: '#0f1117' }}>
-        {([['patch', '🔌 Patch'], ['fixtures', '📦 Fixture-Bibliothek']] as const).map(([id, label]) => (
+        {([
+          ['patch',    '🔌 Patch'],
+          ['fixtures', '📦 Bibliothek'],
+          ['creator',  '🔧 Fixture-Editor'],
+        ] as [SetupSub, string][]).map(([id, label]) => (
           <button
             key={id}
             onClick={() => setSub(id)}
@@ -57,6 +63,7 @@ function SetupTab(): React.JSX.Element {
       <div className="flex-1 overflow-hidden">
         {sub === 'patch'    && <PatchPanel />}
         {sub === 'fixtures' && <FixtureBrowser />}
+        {sub === 'creator'  && <FixtureCreator />}
       </div>
     </div>
   )

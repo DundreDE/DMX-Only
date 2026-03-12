@@ -66,12 +66,27 @@ export interface Bank {
   color: string    // all scenes in this bank use this colour
 }
 
+export type EfxWave = 'sine' | 'triangle' | 'square' | 'sawtooth' | 'random'
+
+export interface SceneEffect {
+  id: string
+  label: string
+  target: FixtureCapabilityType
+  wave: EfxWave
+  speed: number    // BPM
+  size: number     // amplitude 0-255
+  base: number     // centre 0-255
+  offset: number   // per-fixture phase spread in degrees
+  fixtureIds: string[]
+}
+
 export interface Scene {
   id: string
   name: string
   fadeTime: number
-  bankId?: string              // reference to Bank.id
-  values: Record<string, number[]>  // universeIndex → sparse channel values (length 512)
+  bankId?: string
+  values: Record<string, number[]>  // universeIndex → 512 DMX values
+  effects?: SceneEffect[]
 }
 
 export interface ChaserStep {
