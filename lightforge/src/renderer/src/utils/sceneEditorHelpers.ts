@@ -152,6 +152,9 @@ export const WAVE_LABELS: Record<EfxWave, string> = {
   square: 'Rechteck',
   sawtooth: 'Sägezahn',
   random: 'Zufall',
+  pulse: 'Impuls',
+  damping: 'Dämpfung',
+  echo: 'Echo',
 }
 
 // ── Fixture Grouping ────────────────────────────────────────────────────────

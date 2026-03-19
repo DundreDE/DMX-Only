@@ -40,7 +40,6 @@ export interface CueSheet {
  */
 export class CueSheetManager {
   private sheets: Map<string, CueSheet> = new Map()
-  private activeCue: number = 0
 
   /**
    * Create new cue sheet

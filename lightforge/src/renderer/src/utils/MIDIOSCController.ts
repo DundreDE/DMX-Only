@@ -7,9 +7,9 @@ export interface MIDIMapping {
   id: string
   label: string
   channel: number
-  controller: number // CC number
+  controller: number
   target: 'master' | 'effect-speed' | 'scene-select' | 'custom'
-  targetId?: string // for custom targets
+  targetId?: string
   minValue: number
   maxValue: number
   inverted: boolean
@@ -18,7 +18,7 @@ export interface MIDIMapping {
 
 export interface OSCMapping {
   id: string
-  address: string // e.g. "/lightforge/master"
+  address: string
   type: 'float' | 'int' | 'string'
   target: 'master' | 'effect-speed' | 'scene-select' | 'fixture-group'
   targetId?: string
@@ -33,13 +33,14 @@ export interface MIDILearnContext {
   expectedController?: number
 }
 
+type MIDIData = Uint8Array
+
 /**
  * MIDI Controller Manager
  */
 export class MIDIControllerManager {
   private mappings: Map<string, MIDIMapping> = new Map()
   private learnContext: MIDILearnContext | null = null
-  private midiInput: WebMidi.MIDIInput | null = null
   private subscribers: Set<(mapping: MIDIMapping, value: number) => void> = new Set()
 
   /**
@@ -47,22 +48,26 @@ export class MIDIControllerManager {
    */
   async initialize(): Promise<boolean> {
     try {
-      const midiAccess = await (navigator as any).requestMIDIAccess()
+      const nav = navigator as any
+      if (!nav.requestMIDIAccess) {
+        console.warn('MIDI not supported in this browser')
+        return false
+      }
 
-      // Listen for MIDI inputs
-      midiAccess.inputs.forEach((input: WebMidi.MIDIInput) => {
-        input.onmidimessage = (event: WebMidi.MIDIMessageEvent) => {
-          this.handleMIDIMessage(event.data)
+      const midiAccess = await nav.requestMIDIAccess()
+
+      midiAccess.inputs.forEach((input: any) => {
+        input.onmidimessage = (event: any) => {
+          this.handleMIDIMessage(event.data as MIDIData)
         }
       })
 
-      // Handle new inputs
-      midiAccess.onstatechange = (event: WebMidi.MIDIConnectionEvent) => {
+      midiAccess.onstatechange = (event: any) => {
         if (event.port.type === 'input') {
-          const input = event.port as WebMidi.MIDIInput
+          const input = event.port
           if (event.port.state === 'connected') {
-            input.onmidimessage = (e: WebMidi.MIDIMessageEvent) => {
-              this.handleMIDIMessage(e.data)
+            input.onmidimessage = (e: any) => {
+              this.handleMIDIMessage(e.data as MIDIData)
             }
           }
         }
@@ -95,17 +100,15 @@ export class MIDIControllerManager {
   /**
    * Handle incoming MIDI message
    */
-  private handleMIDIMessage(data: Uint8Array): void {
-    const status = data[0]
+  private handleMIDIMessage(data: MIDIData): void {
+    const status = data[0]!
     const channel = (status & 0x0f) + 1
     const command = (status & 0xf0) >> 4
 
     if (command === 0xb) {
-      // Control Change
-      const controller = data[1]
-      const value = data[2]
+      const controller = data[1]!
+      const value = data[2]!
 
-      // If in learn mode, create mapping
       if (this.learnContext?.active) {
         const mapping: MIDIMapping = {
           id: `midi_${Date.now()}`,
@@ -123,14 +126,11 @@ export class MIDIControllerManager {
         return
       }
 
-      // Route to existing mapping
-      const key = `${channel}:${controller}`
       const mapping = Array.from(this.mappings.values()).find(
         m => m.channel === channel && m.controller === controller
       )
 
       if (mapping) {
-        // Normalize value
         const normalizedValue = value / 127
         this.subscribers.forEach(cb => cb(mapping, normalizedValue))
       }
