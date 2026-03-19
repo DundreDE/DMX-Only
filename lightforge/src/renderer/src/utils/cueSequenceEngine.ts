@@ -225,7 +225,7 @@ export function calculateCrossfade(
     return toCue.dmxValues
   }
 
-  const fadeProgress = Math.min(1, progress * toCue.duration / fadeDuration)
+  const fadeProgress = Math.min(1, progress / fadeDuration)
 
   for (const channel of allChannels) {
     const fromValue = fromCue.dmxValues[channel] || 0

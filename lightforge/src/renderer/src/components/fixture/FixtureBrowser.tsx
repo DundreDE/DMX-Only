@@ -36,6 +36,10 @@ export function FixtureBrowser(): React.JSX.Element {
           (result.errors.length ? ` (${result.errors.length} Fehler)` : '')
         )
       }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Import fehlgeschlagen'
+      setLastImport(`✗ ${message}`)
+      console.error('Fixture import error:', error)
     } finally {
       setImporting(false)
     }
@@ -50,6 +54,10 @@ export function FixtureBrowser(): React.JSX.Element {
         addToLibrary(fixtures)
         setLastImport(`✓ ${fixtures.length} Fixture(s) importiert`)
       }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Import fehlgeschlagen'
+      setLastImport(`✗ ${message}`)
+      console.error('Fixture import error:', error)
     } finally {
       setImporting(false)
     }

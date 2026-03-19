@@ -124,11 +124,12 @@ export function generateEffectSequence(
       Math.min(255, (value * config.amplitude) / 2 + config.offset)
     )
 
-    // Apply to all target fixtures/channels
-    for (let ch = 0; ch < dmxChannelCount; ch++) {
-      frameData[ch] = config.targetChannels.includes(`ch-${ch}`)
-        ? dmxValue
-        : 0
+    // Apply to target fixtures/channels only
+    for (const channelId of config.targetChannels) {
+      const chNum = parseInt(channelId.replace('ch-', ''), 10)
+      if (!isNaN(chNum) && chNum >= 0 && chNum < dmxChannelCount) {
+        frameData[chNum] = dmxValue
+      }
     }
 
     sequence.push(frameData)

@@ -52,6 +52,10 @@ export function Settings(): React.JSX.Element {
       } else {
         setConnectError(result.error ?? 'Verbindung fehlgeschlagen')
       }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Verbindung fehlgeschlagen'
+      setConnectError(message)
+      console.error('DMX connection error:', error)
     } finally {
       setConnecting(false)
     }

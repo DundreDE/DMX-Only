@@ -41,7 +41,10 @@ function calcWave(wave: EfxWave, t: number, bpm: number, size: number, base: num
   const phase = 2 * Math.PI * freq * t + (deg * Math.PI / 180)
   let w = 0
   if (wave === 'sine')     w = Math.sin(phase)
-  if (wave === 'triangle') w = (2 / Math.PI) * Math.asin(Math.sin(phase))
+  if (wave === 'triangle') {
+    const normalized = ((phase / Math.PI) % 2 + 2) % 2
+    w = normalized < 1 ? 2 * normalized - 1 : 2 * (2 - normalized) - 1
+  }
   if (wave === 'square')   w = Math.sign(Math.sin(phase))
   if (wave === 'sawtooth') w = 2 * (((freq * t + deg / 360) % 1 + 1) % 1) - 1
   if (wave === 'random') {

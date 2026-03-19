@@ -19,15 +19,10 @@ export { LiveMixer, globalLiveMixer, MixerGroup, MixerFader, MixerEffect, MixerB
  * Initialize all engines with default settings
  */
 export function initializeDasLight5Engines() {
-  const {
-    globalDMXEngine,
-    globalFixtureDatabase,
-    globalPlaybackEngine,
-    globalLiveMixer,
-  } = require('./DMXEngine').globalDMXEngine,
-    require('./FixtureDatabase').globalFixtureDatabase,
-    require('./PlaybackEngine').globalPlaybackEngine,
-    require('./LiveMixer').globalLiveMixer
+  const globalDMXEngine = require('./DMXEngine').globalDMXEngine
+  const globalFixtureDatabase = require('./FixtureDatabase').globalFixtureDatabase
+  const globalPlaybackEngine = require('./PlaybackEngine').globalPlaybackEngine
+  const globalLiveMixer = require('./LiveMixer').globalLiveMixer
 
   globalDMXEngine.start()
 

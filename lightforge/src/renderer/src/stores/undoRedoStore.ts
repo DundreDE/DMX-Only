@@ -58,7 +58,7 @@ export const useUndoRedoStore = create<UndoRedoStore>((set, get) => ({
   isReplaying: false,
 
   // Queries
-  canUndo: () => get().currentIndex > 0,
+  canUndo: () => get().currentIndex >= 0,
   canRedo: () => get().currentIndex < get().history.length - 1,
   getHistory: () => get().history,
   getCurrentAction: () => {

@@ -66,7 +66,28 @@ export interface Bank {
   color: string    // all scenes in this bank use this colour
 }
 
-export type EfxWave = 'sine' | 'triangle' | 'square' | 'sawtooth' | 'random'
+export type EfxWave = 'sine' | 'triangle' | 'square' | 'sawtooth' | 'random' | 'damping' | 'echo' | 'pulse'
+
+export interface ADSREnvelope {
+  attack: number    // 0-1000ms
+  decay: number     // 0-1000ms
+  sustain: number   // 0-255 (level)
+  release: number   // 0-1000ms
+}
+
+export interface LFO {
+  enabled: boolean
+  target: 'speed' | 'size' | 'base'
+  wave: EfxWave
+  frequency: number // Hz
+  depth: number     // 0-100 (%)
+}
+
+export interface Keyframe {
+  time: number      // seconds
+  value: number     // 0-255
+  easing?: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut'
+}
 
 export interface SceneEffect {
   id: string
@@ -78,6 +99,13 @@ export interface SceneEffect {
   base: number     // centre 0-255
   offset: number   // per-fixture phase spread in degrees
   fixtureIds: string[]
+  
+  // Enhanced features
+  envelope?: ADSREnvelope
+  lfo?: LFO
+  keyframes?: Keyframe[]
+  blendMode?: 'add' | 'multiply' | 'screen' | 'overlay'
+  opacity?: number // 0-1
 }
 
 export interface Scene {

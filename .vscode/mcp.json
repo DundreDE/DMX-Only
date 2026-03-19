@@ -1,0 +1,20 @@
+{
+	"servers": {
+		"playwright": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"@playwright/mcp@latest"
+			]
+		},
+		"paper": {
+			"type": "http",
+			"url": "http://127.0.0.1:29979/mcp"
+		},
+		"DeepWiki": {
+			"url": "https://mcp.deepwiki.com/mcp",
+			"type": "http"
+		}
+	},
+	"inputs": []
+}

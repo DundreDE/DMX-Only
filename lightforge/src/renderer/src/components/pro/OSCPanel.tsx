@@ -84,7 +84,12 @@ export function OSCPanel(): React.JSX.Element {
             <input
               type="number"
               value={config.localPort}
-              onChange={e => setConfig({ localPort: parseInt(e.target.value) })}
+              onChange={e => {
+                const port = parseInt(e.target.value, 10)
+                if (!isNaN(port) && port >= 1 && port <= 65535) {
+                  setConfig({ localPort: port })
+                }
+              }}
               disabled={isConnected}
               className="w-full px-2 py-1 text-xs bg-slate-700 text-white rounded disabled:opacity-50"
             />
@@ -94,7 +99,12 @@ export function OSCPanel(): React.JSX.Element {
             <input
               type="number"
               value={config.remotePort}
-              onChange={e => setConfig({ remotePort: parseInt(e.target.value) })}
+              onChange={e => {
+                const port = parseInt(e.target.value, 10)
+                if (!isNaN(port) && port >= 1 && port <= 65535) {
+                  setConfig({ remotePort: port })
+                }
+              }}
               disabled={isConnected}
               className="w-full px-2 py-1 text-xs bg-slate-700 text-white rounded disabled:opacity-50"
             />
